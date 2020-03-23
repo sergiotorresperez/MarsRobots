@@ -1,6 +1,7 @@
 package com.bitbytebit.marsrobot
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -291,5 +292,26 @@ class RobotTest {
         val expected = robot.copy(coordinate = Coordinate(0, 1))
         val actual = robot.moveForward()
         assertEquals("Robot should moved", expected, actual)
+    }
+
+    @Test
+    fun processesInstructions() {
+        val robot0 = Robot(
+            mars = mock(),
+            coordinate = mock(),
+            orientation = mock()
+        )
+
+        val robot1: Robot = robot0.copy(coordinate = mock())
+        val robot2: Robot = robot1.copy(coordinate = mock())
+
+        val instruction0: Instruction = mock()
+        val instruction1: Instruction = mock()
+
+        whenever(instruction0.processWith(robot0)).thenReturn(robot1)
+        whenever(instruction1.processWith(robot1)).thenReturn(robot2)
+
+        val actual = robot0.processInstructions(instruction0, instruction1)
+        assertEquals("Robot should have processed all the instructions", robot2, actual)
     }
 }

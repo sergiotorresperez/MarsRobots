@@ -42,6 +42,9 @@ data class Robot(
                 }
         }
     }
+
+    fun processInstructions(vararg instructions: Instruction) =
+        instructions.fold(this) { r, i -> i.processWith(r) }
 }
 
 data class Coordinate(
