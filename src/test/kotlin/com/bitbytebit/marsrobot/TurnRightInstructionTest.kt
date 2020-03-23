@@ -41,7 +41,7 @@ class TurnRightInstructionTest {
         val robot = Robot(
             mars = mock(),
             coordinate = mock(),
-            orientation = Orientation.WEST
+            orientation = Orientation.SOUTH
         )
 
         val expected = robot.copy(orientation = Orientation.WEST)
