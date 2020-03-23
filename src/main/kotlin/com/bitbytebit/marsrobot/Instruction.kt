@@ -7,7 +7,7 @@ interface Instruction {
 class TurnLeftInstruction: Instruction {
 
     override fun processWith(robot: Robot): Robot {
-        val newOrientationIdx = (Orientation.values().size + robot.orientation.ordinal - 1) % Orientation.values().size
+        val newOrientationIdx = (robot.orientation.ordinal + 1) % Orientation.values().size
         val newOrientation = Orientation.values()[newOrientationIdx]
         return robot.copy(orientation = newOrientation)
     }
