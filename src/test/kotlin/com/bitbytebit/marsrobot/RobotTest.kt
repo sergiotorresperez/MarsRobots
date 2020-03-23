@@ -6,12 +6,10 @@ import org.junit.Test
 
 class RobotTest {
 
-    private val mars = Mars(5, 3)
-
     @Test
     fun whenInWord_returnsNotLost() {
         val robot = Robot(
-            mars = mars,
+            mars = Mars(5, 3),
             coordinate = Coordinate(0, 0),
             orientation = mock()
         )
@@ -22,6 +20,7 @@ class RobotTest {
 
     @Test
     fun whenOverflowsNorthLimit_returnsLost() {
+        val mars = Mars(5, 3)
         val robot = Robot(
             mars = mars,
             coordinate = Coordinate(0, mars.height + 1),
@@ -36,7 +35,7 @@ class RobotTest {
     @Test
     fun whenOverflowsEastLimit_returnsLost() {
         val robot = Robot(
-            mars = mars,
+            mars = Mars(5, 3),
             coordinate = Coordinate(-1, 0),
             orientation = mock()
         )
@@ -48,7 +47,7 @@ class RobotTest {
     @Test
     fun whenOverflowsSouthLimit_returnsLost() {
         val robot = Robot(
-            mars = mars,
+            mars = Mars(5, 3),
             coordinate = Coordinate(0, -1),
             orientation = mock()
         )
@@ -59,6 +58,7 @@ class RobotTest {
 
     @Test
     fun whenOverflowsWestLimit_returnsLost() {
+        val mars = Mars(5, 3)
         val robot = Robot(
             mars = mars,
             coordinate = Coordinate(mars.width + 1, 0),
@@ -262,5 +262,34 @@ class RobotTest {
         val marsAfterMovement = robot.moveForward().mars
         val actual = marsAfterMovement.isScented(startCoordinate)
         assertTrue("Coordinate should be escented", actual)
+    }
+
+    @Test
+    fun whenMovingFromScentedCoordinateToInvalidCoordinate_robotDoesNotMove() {
+        val startCoordinate = Coordinate(0, 0)
+
+        val robot = Robot(
+            mars = Mars(5, 3).setScented(startCoordinate),
+            coordinate = startCoordinate,
+            orientation = Orientation.SOUTH
+        )
+
+        val actual = robot.moveForward()
+        assertEquals("Robot should have not moved", robot, actual)
+    }
+
+    @Test
+    fun whenMovingFromScentedCoordinateToValidCoordinate_robotDoesMove() {
+        val startCoordinate = Coordinate(0, 0)
+
+        val robot = Robot(
+            mars = Mars(5, 3).setScented(startCoordinate),
+            coordinate = startCoordinate,
+            orientation = Orientation.NORTH
+        )
+
+        val expected = robot.copy(coordinate = Coordinate(0, 1))
+        val actual = robot.moveForward()
+        assertEquals("Robot should moved", expected, actual)
     }
 }

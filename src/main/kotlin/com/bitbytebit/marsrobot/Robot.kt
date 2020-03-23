@@ -28,14 +28,19 @@ data class Robot(
             Orientation.SOUTH -> coordinate.copy(y = coordinate.y - 1)
             Orientation.EAST -> coordinate.copy(x = coordinate.x + 1)
         }
-        return copy(coordinate = newCoordinate)
-            .let { movedRobot ->
-                if (movedRobot.isLost) {
-                    movedRobot.copy(mars = mars.setScented(coordinate))
-                } else {
-                    movedRobot
+
+        return if (!mars.contains(newCoordinate) && mars.isScented(coordinate)) {
+            this
+        } else {
+            copy(coordinate = newCoordinate)
+                .let { movedRobot ->
+                    if (!mars.contains(movedRobot.coordinate)) {
+                        movedRobot.copy(mars = mars.setScented(coordinate))
+                    } else {
+                        movedRobot
+                    }
                 }
-            }
+        }
     }
 }
 
