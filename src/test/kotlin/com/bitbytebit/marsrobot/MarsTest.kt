@@ -7,6 +7,22 @@ import org.junit.Test
 class MarsTest {
 
     @Test
+    fun whenInBounds_returnsContainsCoordinate() {
+        val mars = Mars(2,2)
+
+        val actual = mars.contains(Coordinate(2,2))
+        assertFalse("Should return coordinate contained", actual)
+    }
+
+    @Test
+    fun whenOverflowsNorthLimit_returnsLost() {
+        val mars = Mars(2,2)
+
+        val actual = mars.contains(Coordinate(2,3))
+        assertFalse("Should return coordinate not contained", actual)
+    }
+
+    @Test
     fun whenNotEscented_returnsNotScented() {
         val mars = Mars(2,2)
         val actual = mars.isScented(Coordinate(0,0))

@@ -235,4 +235,32 @@ class RobotTest {
 
         assertEquals("Should be one step east", expected, actual)
     }
+
+    @Test
+    fun doesNotLeaveScent_whenMovingToValidCoordinate() {
+        val startCoordinate = Coordinate(0, 0)
+        val robot = Robot(
+            mars = Mars(2, 2),
+            coordinate = startCoordinate,
+            orientation = Orientation.NORTH
+        )
+
+        val marsAfterMovement = robot.moveForward().mars
+        val actual = marsAfterMovement.isScented(startCoordinate)
+        assertFalse("Coordinate should not be escented", actual)
+    }
+
+    @Test
+    fun leavesScent_whenMovingToValidCoordinate() {
+        val startCoordinate = Coordinate(0, 0)
+        val robot = Robot(
+            mars = Mars(2, 2),
+            coordinate = startCoordinate,
+            orientation = Orientation.SOUTH
+        )
+
+        val marsAfterMovement = robot.moveForward().mars
+        val actual = marsAfterMovement.isScented(startCoordinate)
+        assertTrue("Coordinate should be escented", actual)
+    }
 }

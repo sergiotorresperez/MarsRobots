@@ -7,10 +7,7 @@ data class Robot(
 ) {
 
     val isLost: Boolean
-        get() = coordinate.x < 0
-                || coordinate.x >= mars.width
-                || coordinate.y < 0
-                || coordinate.y >= mars.height
+        get() = !mars.contains(coordinate)
 
     fun turnLeft(): Robot {
         val newOrientationIdx = (orientation.ordinal + 1) % Orientation.values().size
@@ -32,6 +29,13 @@ data class Robot(
             Orientation.EAST -> coordinate.copy(x = coordinate.x + 1)
         }
         return copy(coordinate = newCoordinate)
+            .let { movedRobot ->
+                if (movedRobot.isLost) {
+                    movedRobot.copy(mars = mars.setScented(coordinate))
+                } else {
+                    movedRobot
+                }
+            }
     }
 }
 
