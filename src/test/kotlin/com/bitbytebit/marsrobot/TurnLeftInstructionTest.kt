@@ -65,5 +65,4 @@ class TurnLeftInstructionTest {
         assertEquals("Should be facing north", expected, actual)
     }
 
-
 }

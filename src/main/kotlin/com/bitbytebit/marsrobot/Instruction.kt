@@ -23,3 +23,11 @@ class TurnRightInstruction: Instruction {
     }
 
 }
+
+class MoveForwardInstruction: Instruction {
+
+    override fun processWith(robot: Robot): Robot {
+        TODO()
+    }
+
+}
