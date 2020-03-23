@@ -7,7 +7,9 @@ interface Instruction {
 class TurnLeftInstruction: Instruction {
 
     override fun processWith(robot: Robot): Robot {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val newOrientationIdx = (Orientation.values().size + robot.orientation.ordinal - 1) % Orientation.values().size
+        val newOrientation = Orientation.values()[newOrientationIdx]
+        return robot.copy(orientation = newOrientation)
     }
 
 }
