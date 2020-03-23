@@ -12,5 +12,5 @@ data class Coordinate(
 )
 
 enum class Orientation {
-    NORTH, EAST, SOUTH, WEST
+    NORTH, WEST, SOUTH, EAST
 }
