@@ -27,7 +27,13 @@ class TurnRightInstruction: Instruction {
 class MoveForwardInstruction: Instruction {
 
     override fun processWith(robot: Robot): Robot {
-        TODO()
+        val newCoordinate = when (robot.orientation) {
+            Orientation.NORTH -> robot.coordinate.copy(y = robot.coordinate.y + 1)
+            Orientation.WEST -> robot.coordinate.copy(x = robot.coordinate.x - 1)
+            Orientation.SOUTH -> robot.coordinate.copy(y = robot.coordinate.y - 1)
+            Orientation.EAST -> robot.coordinate.copy(x = robot.coordinate.x + 1)
+        }
+        return robot.copy(coordinate = newCoordinate)
     }
 
 }
