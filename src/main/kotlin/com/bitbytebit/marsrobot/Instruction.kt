@@ -13,3 +13,11 @@ class TurnLeftInstruction: Instruction {
     }
 
 }
+
+class TurnRightInstruction: Instruction {
+
+    override fun processWith(robot: Robot): Robot {
+        TODO()
+    }
+
+}
