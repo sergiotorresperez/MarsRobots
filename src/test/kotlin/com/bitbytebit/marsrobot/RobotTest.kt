@@ -10,69 +10,6 @@ import org.junit.Test
 class RobotTest {
 
     @Test
-    fun whenInWord_returnsNotLost() {
-        val robot = Robot(
-            mars = Mars(5, 3),
-            coordinate = Coordinate(0, 0),
-            orientation = mock()
-        )
-
-        val actual = robot.isLost
-        assertFalse("Should return is not lost", actual)
-    }
-
-    @Test
-    fun whenOverflowsNorthLimit_returnsLost() {
-        val mars = Mars(5, 3)
-        val robot = Robot(
-            mars = mars,
-            coordinate = Coordinate(0, mars.height + 1),
-            orientation = mock()
-        )
-
-        val actual = robot.isLost
-        assertTrue("Should return is lost", actual)
-    }
-
-
-    @Test
-    fun whenOverflowsEastLimit_returnsLost() {
-        val robot = Robot(
-            mars = Mars(5, 3),
-            coordinate = Coordinate(-1, 0),
-            orientation = mock()
-        )
-
-        val actual = robot.isLost
-        assertTrue("Should return is lost", actual)
-    }
-
-    @Test
-    fun whenOverflowsSouthLimit_returnsLost() {
-        val robot = Robot(
-            mars = Mars(5, 3),
-            coordinate = Coordinate(0, -1),
-            orientation = mock()
-        )
-
-        val actual = robot.isLost
-        assertTrue("Should return is lost", actual)
-    }
-
-    @Test
-    fun whenOverflowsWestLimit_returnsLost() {
-        val mars = Mars(5, 3)
-        val robot = Robot(
-            mars = mars,
-            coordinate = Coordinate(mars.width + 1, 0),
-            orientation = mock()
-        )
-
-        val actual = robot.isLost
-        assertTrue("Should return is lost", actual)
-    }
-
-    @Test
     fun turnsLeft_when_facingNorth() {
         val robot = Robot(
             mars = mock(),
@@ -240,7 +177,7 @@ class RobotTest {
     }
 
     @Test
-    fun doesNotLeaveScent_whenMovingToValidCoordinate() {
+    fun doesNotLeaveScent_whenMovingInsideBounds() {
         val startCoordinate = Coordinate(0, 0)
         val robot = Robot(
             mars = Mars(2, 2),
@@ -254,17 +191,22 @@ class RobotTest {
     }
 
     @Test
-    fun leavesScent_whenMovingToValidCoordinate() {
-        val startCoordinate = Coordinate(0, 0)
+    fun makesRobotLost_andMakesCoordinateScented_whenMovingOutOfBounds() {
+        val mars = Mars(1, 1)
+        val coordinate = Coordinate(0, 0)
         val robot = Robot(
-            mars = Mars(2, 2),
-            coordinate = startCoordinate,
-            orientation = Orientation.S
+            mars = mars,
+            coordinate = coordinate,
+            orientation = Orientation.N
         )
 
-        val marsAfterMovement = robot.moveForward().mars
-        val actual = marsAfterMovement.isScented(startCoordinate)
-        assertTrue("Coordinate should be escented", actual)
+        val expected = robot.copy(
+            coordinate = Coordinate(0, 1),
+            isLost = true,
+            mars = mars.setScented(coordinate))
+        val actual = robot.moveForward()
+
+        assertEquals("Should be lost", expected, actual)
     }
 
     @Test
@@ -293,14 +235,32 @@ class RobotTest {
 
         val expected = robot.copy(coordinate = Coordinate(0, 1))
         val actual = robot.moveForward()
-        assertEquals("Robot should moved", expected, actual)
+        assertEquals("Robot should have moved", expected, actual)
+    }
+
+    @Test
+    fun whenStartingFromOutOfBounds_movementIsAllowed_andRobotDoesNotBecomeLost() {
+
+        val robot = Robot(
+            mars = Mars(5, 3),
+            coordinate = Coordinate(-1, -1),
+            orientation = Orientation.S,
+            isLost = false
+        )
+
+        val expected = robot.copy(
+            coordinate = Coordinate(-1, -2),
+            isLost = false
+        )
+        val actual = robot.moveForward()
+        assertEquals("Robot should have moved", expected, actual)
     }
 
     @Test
     fun processesInstructions() {
         val robot0 = Robot(
-            mars = Mars(10,10),
-            coordinate = Coordinate(0,0),
+            mars = mock(),
+            coordinate = mock(),
             orientation = N
         )
 
@@ -317,18 +277,4 @@ class RobotTest {
         assertEquals("Robot should have processed all the instructions", robot2, actual)
     }
 
-    @Test
-    fun whenLost_doesNotProcessInstruction() {
-        val robot0 = Robot(
-            mars = Mars(2, 2),
-            coordinate = Coordinate(-1, -1),
-            orientation = mock()
-        )
-        val instruction: Instruction = mock()
-
-        val actual = robot0.processInstructions(instruction)
-        verifyZeroInteractions(instruction)
-        assertEquals("Robot should stay in place", robot0, actual)
-
-    }
 }

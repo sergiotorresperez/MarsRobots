@@ -3,11 +3,9 @@ package com.bitbytebit.marsrobot
 data class Robot(
     val mars: Mars,
     val coordinate: Coordinate,
-    val orientation: Orientation
+    val orientation: Orientation,
+    val isLost: Boolean = false
 ) {
-
-    val isLost: Boolean
-        get() = !mars.contains(coordinate)
 
     fun turnLeft(): Robot {
         val newOrientationIdx = (orientation.ordinal + 1) % Orientation.values().size
@@ -29,26 +27,30 @@ data class Robot(
             Orientation.E -> coordinate.copy(x = coordinate.x + 1)
         }
 
-        return if (!mars.contains(newCoordinate) && mars.isScented(coordinate)) {
-            this
-        } else {
-            copy(coordinate = newCoordinate)
-                .let { movedRobot ->
-                    if (!mars.contains(movedRobot.coordinate)) {
-                        movedRobot.copy(mars = mars.setScented(coordinate))
-                    } else {
-                        movedRobot
-                    }
-                }
+        return when {
+            isLost -> this
+            !mars.contains(newCoordinate) && mars.isScented(coordinate) -> this
+            else -> moveToCoordinate(newCoordinate)
         }
     }
 
+    private fun moveToCoordinate(newCoordinate: Coordinate): Robot {
+        return copy(coordinate = newCoordinate)
+            .let { movedRobot ->
+                if (mars.contains(coordinate) && !mars.contains(movedRobot.coordinate)) {
+                    movedRobot.copy(mars = mars.setScented(coordinate), isLost = true)
+                } else {
+                    movedRobot
+                }
+            }
+    }
+
     fun processInstructions(vararg instructions: Instruction) =
-        instructions.fold(this) { r, i -> if (r.isLost) { r } else { i.processWith(r) } }
+        instructions.fold(this) { r, i -> i.processWith(r) }
 
 
     override fun toString(): String {
-        return "$coordinate $orientation ${if (isLost) "LOST" else ""}"
+        return "$coordinate $orientation${if (isLost) " LOST" else ""}"
     }
 }
 

@@ -10,15 +10,39 @@ class MarsTest {
     fun whenInBounds_returnsContainsCoordinate() {
         val mars = Mars(2,2)
 
-        val actual = mars.contains(Coordinate(2,2))
-        assertFalse("Should return coordinate contained", actual)
+        val actual = mars.contains(Coordinate(1,1))
+        assertTrue("Should return coordinate contained", actual)
     }
 
     @Test
-    fun whenOverflowsNorthLimit_returnsLost() {
+    fun whenOverflowsNorthLimit_returnsDosNotContainsCoordinate() {
         val mars = Mars(2,2)
 
-        val actual = mars.contains(Coordinate(2,3))
+        val actual = mars.contains(Coordinate(1,2))
+        assertFalse("Should return coordinate not contained", actual)
+    }
+
+    @Test
+    fun whenOverflowsEastLimit_returnsDosNotContainsCoordinate() {
+        val mars = Mars(2,2)
+
+        val actual = mars.contains(Coordinate(2,0))
+        assertFalse("Should return coordinate not contained", actual)
+    }
+
+    @Test
+    fun whenOverflowsSouthLimit_returnsDosNotContainsCoordinate() {
+        val mars = Mars(2,2)
+
+        val actual = mars.contains(Coordinate(0,-1))
+        assertFalse("Should return coordinate not contained", actual)
+    }
+
+    @Test
+    fun whenOverflowsWestLimit_returnsLost() {
+        val mars = Mars(2,2)
+
+        val actual = mars.contains(Coordinate(-1, 0))
         assertFalse("Should return coordinate not contained", actual)
     }
 

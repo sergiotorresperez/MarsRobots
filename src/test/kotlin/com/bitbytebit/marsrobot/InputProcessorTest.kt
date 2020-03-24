@@ -26,7 +26,7 @@ class InputProcessorTest {
                 FRRFLLFFRRFLL
 
                 0 3 W
-                LLFFFLFLFL
+                LLFFFLFLFLF
 
                 """.trimIndent()
 
@@ -34,11 +34,12 @@ class InputProcessorTest {
             1 1 E
             3 3 N LOST
             2 3 S
+
         """.trimIndent()
 
         inputProcessor.process(input)
 
-        val actual = baos.toString(utf8)
+        val actual = baos.toString(utf8).replace("\r", "")
         Assert.assertEquals("Sample output should match", expected, actual)
     }
 }
