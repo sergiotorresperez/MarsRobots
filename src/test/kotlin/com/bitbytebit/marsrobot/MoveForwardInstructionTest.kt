@@ -8,7 +8,7 @@ import org.junit.Test
 
 class MoveForwardInstructionTest{
 
-    private val instruction = MoveForwardInstruction()
+    private val instruction = MoveForwardInstruction
 
     @Test
     fun movesRobotForward() {

@@ -23,10 +23,10 @@ data class Robot(
 
     fun moveForward(): Robot {
         val newCoordinate = when (orientation) {
-            Orientation.NORTH -> coordinate.copy(y = coordinate.y + 1)
-            Orientation.WEST -> coordinate.copy(x = coordinate.x - 1)
-            Orientation.SOUTH -> coordinate.copy(y = coordinate.y - 1)
-            Orientation.EAST -> coordinate.copy(x = coordinate.x + 1)
+            Orientation.N -> coordinate.copy(y = coordinate.y + 1)
+            Orientation.W -> coordinate.copy(x = coordinate.x - 1)
+            Orientation.S -> coordinate.copy(y = coordinate.y - 1)
+            Orientation.E -> coordinate.copy(x = coordinate.x + 1)
         }
 
         return if (!mars.contains(newCoordinate) && mars.isScented(coordinate)) {
@@ -44,14 +44,21 @@ data class Robot(
     }
 
     fun processInstructions(vararg instructions: Instruction) =
-        instructions.fold(this) { r, i -> i.processWith(r) }
+        instructions.fold(this) { r, i -> if (r.isLost) { r } else { i.processWith(r) } }
+
+
+    override fun toString(): String {
+        return "$coordinate $orientation ${if (isLost) "LOST" else ""}"
+    }
 }
 
 data class Coordinate(
     val x: Int,
     val y: Int
-)
-
-enum class Orientation {
-    NORTH, WEST, SOUTH, EAST
+) {
+    override fun toString(): String {
+        return "$x $y"
+    }
 }
+
+enum class Orientation { N, W, S, E }

@@ -4,7 +4,7 @@ interface Instruction {
     fun processWith(robot: Robot): Robot
 }
 
-class TurnLeftInstruction: Instruction {
+object TurnLeftInstruction: Instruction {
 
     override fun processWith(robot: Robot): Robot {
         return robot.turnLeft()
@@ -12,7 +12,7 @@ class TurnLeftInstruction: Instruction {
 
 }
 
-class TurnRightInstruction: Instruction {
+object TurnRightInstruction: Instruction {
 
     override fun processWith(robot: Robot): Robot {
         return robot.turnRight()
@@ -20,7 +20,7 @@ class TurnRightInstruction: Instruction {
 
 }
 
-class MoveForwardInstruction: Instruction {
+object MoveForwardInstruction: Instruction {
 
     override fun processWith(robot: Robot): Robot {
         return robot.moveForward()

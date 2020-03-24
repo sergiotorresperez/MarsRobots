@@ -1,6 +1,8 @@
 package com.bitbytebit.marsrobot
 
+import com.bitbytebit.marsrobot.Orientation.N
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Assert.*
 import org.junit.Test
@@ -75,10 +77,10 @@ class RobotTest {
         val robot = Robot(
             mars = mock(),
             coordinate = mock(),
-            orientation = Orientation.NORTH
+            orientation = N
         )
 
-        val expected = robot.copy(orientation = Orientation.WEST)
+        val expected = robot.copy(orientation = Orientation.W)
         val actual = robot.turnLeft()
         assertEquals("Should be facing west", expected, actual)
     }
@@ -88,10 +90,10 @@ class RobotTest {
         val robot = Robot(
             mars = mock(),
             coordinate = mock(),
-            orientation = Orientation.WEST
+            orientation = Orientation.W
         )
 
-        val expected = robot.copy(orientation = Orientation.SOUTH)
+        val expected = robot.copy(orientation = Orientation.S)
         val actual = robot.turnLeft()
 
         assertEquals("Should be facing south", expected, actual)
@@ -102,10 +104,10 @@ class RobotTest {
         val robot = Robot(
             mars = mock(),
             coordinate = mock(),
-            orientation = Orientation.SOUTH
+            orientation = Orientation.S
         )
 
-        val expected = robot.copy(orientation = Orientation.EAST)
+        val expected = robot.copy(orientation = Orientation.E)
         val actual = robot.turnLeft()
 
         assertEquals("Should be facing east", expected, actual)
@@ -116,10 +118,10 @@ class RobotTest {
         val robot = Robot(
             mars = mock(),
             coordinate = mock(),
-            orientation = Orientation.EAST
+            orientation = Orientation.E
         )
 
-        val expected = robot.copy(orientation = Orientation.NORTH)
+        val expected = robot.copy(orientation = N)
         val actual = robot.turnLeft()
 
         assertEquals("Should be facing north", expected, actual)
@@ -130,10 +132,10 @@ class RobotTest {
         val robot = Robot(
             mars = mock(),
             coordinate = mock(),
-            orientation = Orientation.NORTH
+            orientation = N
         )
 
-        val expected = robot.copy(orientation = Orientation.EAST)
+        val expected = robot.copy(orientation = Orientation.E)
         val actual = robot.turnRight()
 
         assertEquals("Should be facing east", expected, actual)
@@ -144,10 +146,10 @@ class RobotTest {
         val robot = Robot(
             mars = mock(),
             coordinate = mock(),
-            orientation = Orientation.EAST
+            orientation = Orientation.E
         )
 
-        val expected = robot.copy(orientation = Orientation.SOUTH)
+        val expected = robot.copy(orientation = Orientation.S)
         val actual = robot.turnRight()
 
         assertEquals("Should be facing south", expected, actual)
@@ -158,10 +160,10 @@ class RobotTest {
         val robot = Robot(
             mars = mock(),
             coordinate = mock(),
-            orientation = Orientation.SOUTH
+            orientation = Orientation.S
         )
 
-        val expected = robot.copy(orientation = Orientation.WEST)
+        val expected = robot.copy(orientation = Orientation.W)
         val actual = robot.turnRight()
 
         assertEquals("Should be facing west", expected, actual)
@@ -172,10 +174,10 @@ class RobotTest {
         val robot = Robot(
             mars = mock(),
             coordinate = mock(),
-            orientation = Orientation.WEST
+            orientation = Orientation.W
         )
 
-        val expected = robot.copy(orientation = Orientation.NORTH)
+        val expected = robot.copy(orientation = N)
         val actual = robot.turnRight()
 
         assertEquals("Should be facing north", expected, actual)
@@ -186,7 +188,7 @@ class RobotTest {
         val robot = Robot(
             mars = Mars(2, 2),
             coordinate = Coordinate(0, 0),
-            orientation = Orientation.NORTH
+            orientation = N
         )
 
         val expected = robot.copy(coordinate = Coordinate(0, 1))
@@ -200,7 +202,7 @@ class RobotTest {
         val robot = Robot(
             mars = Mars(2, 2),
             coordinate = Coordinate(1, 0),
-            orientation = Orientation.WEST
+            orientation = Orientation.W
         )
 
         val expected = robot.copy(coordinate = Coordinate(0, 0))
@@ -214,7 +216,7 @@ class RobotTest {
         val robot = Robot(
             mars = Mars(2, 2),
             coordinate = Coordinate(0, 1),
-            orientation = Orientation.SOUTH
+            orientation = Orientation.S
         )
 
         val expected = robot.copy(coordinate = Coordinate(0, 0))
@@ -228,7 +230,7 @@ class RobotTest {
         val robot = Robot(
             mars = Mars(2, 2),
             coordinate = Coordinate(0, 0),
-            orientation = Orientation.EAST
+            orientation = Orientation.E
         )
 
         val expected = robot.copy(coordinate = Coordinate(1, 0))
@@ -243,7 +245,7 @@ class RobotTest {
         val robot = Robot(
             mars = Mars(2, 2),
             coordinate = startCoordinate,
-            orientation = Orientation.NORTH
+            orientation = N
         )
 
         val marsAfterMovement = robot.moveForward().mars
@@ -257,7 +259,7 @@ class RobotTest {
         val robot = Robot(
             mars = Mars(2, 2),
             coordinate = startCoordinate,
-            orientation = Orientation.SOUTH
+            orientation = Orientation.S
         )
 
         val marsAfterMovement = robot.moveForward().mars
@@ -272,7 +274,7 @@ class RobotTest {
         val robot = Robot(
             mars = Mars(5, 3).setScented(startCoordinate),
             coordinate = startCoordinate,
-            orientation = Orientation.SOUTH
+            orientation = Orientation.S
         )
 
         val actual = robot.moveForward()
@@ -286,7 +288,7 @@ class RobotTest {
         val robot = Robot(
             mars = Mars(5, 3).setScented(startCoordinate),
             coordinate = startCoordinate,
-            orientation = Orientation.NORTH
+            orientation = N
         )
 
         val expected = robot.copy(coordinate = Coordinate(0, 1))
@@ -297,9 +299,9 @@ class RobotTest {
     @Test
     fun processesInstructions() {
         val robot0 = Robot(
-            mars = mock(),
-            coordinate = mock(),
-            orientation = mock()
+            mars = Mars(10,10),
+            coordinate = Coordinate(0,0),
+            orientation = N
         )
 
         val robot1: Robot = robot0.copy(coordinate = mock())
@@ -313,5 +315,20 @@ class RobotTest {
 
         val actual = robot0.processInstructions(instruction0, instruction1)
         assertEquals("Robot should have processed all the instructions", robot2, actual)
+    }
+
+    @Test
+    fun whenLost_doesNotProcessInstruction() {
+        val robot0 = Robot(
+            mars = Mars(2, 2),
+            coordinate = Coordinate(-1, -1),
+            orientation = mock()
+        )
+        val instruction: Instruction = mock()
+
+        val actual = robot0.processInstructions(instruction)
+        verifyZeroInteractions(instruction)
+        assertEquals("Robot should stay in place", robot0, actual)
+
     }
 }

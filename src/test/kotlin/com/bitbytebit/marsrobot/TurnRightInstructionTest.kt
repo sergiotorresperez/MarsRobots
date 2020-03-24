@@ -7,7 +7,7 @@ import org.junit.Test
 
 class TurnRightInstructionTest {
 
-    private val instruction = TurnRightInstruction()
+    private val instruction = TurnRightInstruction
 
     @Test
     fun turnsRobotRight() {
